@@ -8,15 +8,20 @@ import SectionReview from "@components/SectionReview";
 
 import NavigationCard from "@components/NavigationCard";
 
-const Homepage = () => {
-  return (
+const Homepage = ({ heroList }) => {
+    return (
     <>
-      <Hero
-        imgSrc="/images/home-hero.jpg"
-        imgAlt="Hero Image"
-        title="Next.js 체험코딩"
-        subtitle="Next.js와 MUI로 빠르게 웹사이트 만들기"
-      />
+      { heroList.data && (
+        <Hero
+          imgSrc="/images/home-hero.jpg"
+          imgAlt="Hero Image"
+          // title="Next.js 체험코딩"
+          title={heroList.data.attributes.hero_title}
+          subtitle={heroList.data.attributes.hero_subtitle}
+          // subtitle="Next.js와 MUI로 빠르게 웹사이트 만들기"
+        />
+      )}
+
       <SectionAbout />
       <SectionImage imgSrc="/images/fusion-food.jpg" imgAlt="fusion food" />
       <SectionReview />
@@ -30,7 +35,7 @@ const Homepage = () => {
               imgAlt="food menu"
               title="Menu"
               desc="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, minus."
-              pagePath="/menu"
+              pagePath="./menu"
               ctaText="Check Out"
             />
           </Grid>
@@ -40,7 +45,7 @@ const Homepage = () => {
               imgAlt="catering"
               title="Catering"
               desc="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, minus."
-              pagePath="/catering"
+              pagePath="./catering"
               ctaText="Find Out"
             />
 
@@ -52,3 +57,10 @@ const Homepage = () => {
 };
 
 export default Homepage;
+
+Homepage.getInitialProps = async () => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/home-contents/1`);
+  const heroList = await response.json();
+  // console.log(heroList);
+  return {heroList: heroList}
+}
